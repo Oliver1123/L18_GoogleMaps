@@ -2,8 +2,11 @@ package com.example.oliver.l18_googlemaps;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -11,13 +14,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.example.oliver.l18_googlemaps.CustomView.MyMarker;
 import com.example.oliver.l18_googlemaps.Dialogs.AddMarkerDialog;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -91,22 +100,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        DialogFragment addMarkerDialog = new AddMarkerDialog();
+        Bundle args = new Bundle();
+        args.putParcelable(AddMarkerDialog.ARG_LAT_LONG, latLng);
 
+        DialogFragment addMarkerDialog = new AddMarkerDialog();
+        addMarkerDialog.setArguments(args);
         addMarkerDialog.show(getFragmentManager(), null);
-//
-//        Marker marker = mMap.addMarker(new MarkerOptions()
-//                .position(latLng)
-//                .title("Marker | " + String.format("%1$s | %2$s",
-//                        String.valueOf(latLng.latitude), String.valueOf(latLng.longitude)))
-//                .snippet("My first marker")
-//                .icon(BitmapDescriptorFactory.defaultMarker()));
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_MARKER_REQUEST) {
             Log.d(TAG, "MapActivity onActivityResult AddMarker");
+            if (resultCode == RESULT_OK) {
+                LatLng latLng   = data.getParcelableExtra(AddMarkerDialog.ARG_LAT_LONG);
+                String text     = data.getStringExtra(AddMarkerDialog.ARG_TEXT);
+                String iconUri  = data.getStringExtra(AddMarkerDialog.ARG_ICON_URI);
+
+                String snippet = String.format("Latitude: %.4f \n Longitude: %.4f", latLng.latitude, latLng.longitude);
+                Marker marker = mMap.addMarker(new MyMarker(this)
+                        .position(latLng)
+                        .title(text)
+                        .snippet(snippet)
+                        .icon(iconUri).getMarkerOptions());
+            }
         }
     }
 }

@@ -22,17 +22,20 @@ public class AddMarkerDialog extends DialogFragment implements DialogInterface.O
                                                                 PickImageListener {
     private static final int PICK_IMAGE         = 0;
 
+    public static final String ARG_LAT_LONG     = "com.example.oliver.l18_googlemaps.LatLong";
     public static final String ARG_TEXT         = "com.example.oliver.l18_googlemaps.Text";
     public static final String ARG_ICON_URI     = "com.example.oliver.l18_googlemaps.IconUri";
 
-    TextView mLatitude, mLongitude, mText;
     ImageView mIcon;
     String mIconUri;
     MarkerView markerView;
+    LatLng latLng;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mIconUri = "android.resource://com.example.oliver.l18_googlemaps/" + R.drawable.ic_marker;
+        Bundle args = getArguments();
+        latLng = args.getParcelable(ARG_LAT_LONG);
 
         markerView = new MarkerView(getActivity(), this);
 
@@ -47,7 +50,11 @@ public class AddMarkerDialog extends DialogFragment implements DialogInterface.O
     @Override
     public void onClick(DialogInterface dialog, int which) {
         Log.d(MapsActivity.TAG, "AddMarkerDialog onClick");
+        Log.d(MapsActivity.TAG, "    text: " + markerView.getText());
+        Log.d(MapsActivity.TAG, "    iconUri: " + mIconUri);
         Intent data = new Intent();
+
+        data.putExtra(ARG_LAT_LONG, latLng);
         data.putExtra(ARG_TEXT, markerView.getText());
         data.putExtra(ARG_ICON_URI, mIconUri);
 
