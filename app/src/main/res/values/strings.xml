@@ -2,8 +2,8 @@
     <string name="app_name">L18_GoogleMaps</string>
     <string name="title_activity_maps">Map</string>
     <string name="action_exit">Exit</string>
-    <string name="action_mark_list">Mark List</string>
-    <string name="tvText">Text</string>
+    <string name="action_mark_list">Marker List</string>
+    <string name="tvText">Title</string>
     <string name="tvLongitude">Longitude</string>
     <string name="tvLatitude">Latitude</string>
     <string name="title_activity_markers">MarkersActivity</string>

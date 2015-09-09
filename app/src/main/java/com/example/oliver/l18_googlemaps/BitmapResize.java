@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.oliver.l18_googlemaps.Activities.MapsActivity;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,18 +42,19 @@ public class BitmapResize {
         Log.d(Constants.TAG, result);
         return bitmap;
     }
+
     public static Bitmap decodeBitmapFromUri(Context context, String uri, int reqWidth, int reqHeight) throws IOException {
 
-            InputStream is = context.getContentResolver().openInputStream(Uri.parse(uri));
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
+        InputStream is = context.getContentResolver().openInputStream(Uri.parse(uri));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
 
-            while (is.read(buffer) != -1 ) {
-                bos.write(buffer);
-            }
-            return decodeBitmapFromByteArray(bos.toByteArray(), reqWidth, reqHeight);
-
+        while (is.read(buffer) != -1 ) {
+            bos.write(buffer);
+        }
+        return decodeBitmapFromByteArray(bos.toByteArray(), reqWidth, reqHeight);
     }
+
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {
         // Real bitmap size

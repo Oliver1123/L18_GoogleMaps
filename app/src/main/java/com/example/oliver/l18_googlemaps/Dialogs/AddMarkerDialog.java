@@ -19,7 +19,7 @@ import com.squareup.picasso.Picasso;
 
 public class AddMarkerDialog extends DialogFragment implements DialogInterface.OnClickListener,
                                                                View.OnClickListener {
-    private static final int PICK_IMAGE         = 0;
+    private static final int PICK_IMAGE = 0;
 
     String mIconUri;
     MarkerView markerView;
@@ -76,7 +76,6 @@ public class AddMarkerDialog extends DialogFragment implements DialogInterface.O
                     mIconUri = data.getData().toString();
                     Log.d(Constants.TAG, "AddMarkerDialog mIconUri: " + mIconUri);
                     Picasso.with(getActivity()).load(data.getData()).into(markerView.getIconView());
-//                        mIcon.setImageURI(data.getData());
                 }
             }
         }

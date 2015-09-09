@@ -7,59 +7,48 @@
 
 
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etText_MMV"
-        android:hint="@string/marker_title"
+        android:id="@+id/tvText_MMV"
         android:layout_alignParentTop="true"
-
+        android:text="Title"
+        android:textColor="@android:color/black"
+        android:textSize="18dp"
         android:layout_toRightOf="@+id/ivIcon_MMV"
         android:layout_toEndOf="@+id/ivIcon_MMV"
-        android:layout_toLeftOf="@+id/ibEdit_MMV"
-        android:layout_toStartOf="@+id/ibEdit_MMV"/>
+        android:layout_toLeftOf="@+id/ibDelete_MMV"
+        android:layout_toStartOf="@+id/ibDelete_MMV"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/tvSnippet_MMV"
-        android:text="@string/tvText"
-        android:layout_below="@+id/etText_MMV"
-        android:layout_alignLeft="@+id/etText_MMV"
-        android:layout_alignStart="@+id/etText_MMV"
-        android:layout_alignRight="@+id/etText_MMV"
-        android:layout_alignEnd="@+id/etText_MMV"/>
+        android:text="Snippet"
+        android:layout_below="@+id/tvText_MMV"
+        android:layout_alignLeft="@+id/tvText_MMV"
+        android:layout_alignStart="@+id/tvText_MMV"
+        android:layout_alignRight="@+id/tvText_MMV"
+        android:layout_alignEnd="@+id/tvText_MMV"/>
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/ivIcon_MMV"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:padding="8dp"/>
 
-    <ImageButton
-        android:layout_width="@dimen/image_button_width"
-        android:layout_height="@dimen/image_button_height"
-        android:src="@android:drawable/ic_menu_edit"
-        android:id="@+id/ibEdit_MMV"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
 
     <ImageButton
         android:layout_width="@dimen/image_button_width"
         android:layout_height="@dimen/image_button_height"
         android:src="@android:drawable/ic_menu_delete"
         android:id="@+id/ibDelete_MMV"
-        android:layout_below="@+id/ibEdit_MMV"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"
-        android:layout_alignLeft="@+id/ibEdit_MMV"
-        android:layout_alignStart="@+id/ibEdit_MMV"
-        android:layout_alignRight="@+id/ibEdit_MMV"
-        android:layout_alignEnd="@+id/ibEdit_MMV"
+        android:layout_alignParentEnd="true"
         />
 </RelativeLayout>

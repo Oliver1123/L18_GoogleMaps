@@ -15,6 +15,7 @@ public class LocationInfoDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String locationInfo = getArguments().getString(Constants.RESULT_DATA_KEY);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                  .setTitle(R.string.info_dialog_title)
                  .setMessage(locationInfo)

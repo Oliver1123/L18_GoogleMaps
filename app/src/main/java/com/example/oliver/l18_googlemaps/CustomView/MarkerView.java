@@ -21,11 +21,9 @@ public class MarkerView extends RelativeLayout {
         inflate(activity, R.layout.add_marker_view, this);
 
         findViews();
-
     }
 
     private void findViews() {
-
         mText       = (EditText) findViewById(R.id.etText_MV);
         mIcon       = (ImageView) findViewById(R.id.ivIcon_MV);
 

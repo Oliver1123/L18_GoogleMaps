@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.example.oliver.l18_googlemaps.Activities.MapsActivity;
 import com.example.oliver.l18_googlemaps.CustomView.MarkerListItemView;
 import com.example.oliver.l18_googlemaps.CustomView.MyMarker;
 import com.example.oliver.l18_googlemaps.DB.MarkerQueryHelper;
@@ -28,7 +27,6 @@ public class MarkerAdapter extends BaseAdapter implements MarkerActionCallbackLi
         markerQueryHelper = new MarkerQueryHelper(mContext);
         markerQueryHelper.open();
         mData = markerQueryHelper.getItems();
-
     }
 
     @Override
@@ -64,17 +62,7 @@ public class MarkerAdapter extends BaseAdapter implements MarkerActionCallbackLi
 
         ((MarkerListItemView)rootView).setMarker(marker);
 
-
         return rootView;
-    }
-
-    @Override
-    public void actionEdit(MyMarker marker, String title) {
-        Log.d(Constants.TAG, "actionEdit marker:" + marker + " new Title: " + title);
-        int index = mData.indexOf(marker);
-        mData.get(index).title(title);
-        markerQueryHelper.update(mData.get(index));
-        notifyDataSetChanged();
     }
 
     @Override

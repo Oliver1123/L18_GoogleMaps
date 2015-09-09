@@ -7,11 +7,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,7 +18,6 @@ import java.util.Locale;
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
  * <p/>
- * TODO: Customize class - update intent actions and extra parameters.
  */
 public class FetchAddressIntentService extends IntentService {
     protected ResultReceiver mReceiver;
@@ -40,13 +37,12 @@ public class FetchAddressIntentService extends IntentService {
             // Get the location passed to this service through an extra.
             Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
             mReceiver = intent.getParcelableExtra(Constants.RECEIVER);
-            List<Address> addresses = null;
 
+            List<Address> addresses = null;
             try {
                 addresses = geocoder.getFromLocation(
                         location.getLatitude(),
                         location.getLongitude(),
-                        // In this sample, get just a single address.
                         1);
             } catch (IOException ioException) {
                 // Catch network or other I/O problems.
@@ -73,12 +69,12 @@ public class FetchAddressIntentService extends IntentService {
                 Log.i(Constants.TAG, getString(R.string.address_found));
                 deliverResultToReceiver(Constants.SUCCESS_RESULT, getAddressInfo(address));
             }
-
         }
     }
 
     private String getAddressInfo(Address address) {
         StringBuilder result = new StringBuilder();
+
         String city          = address.getLocality();
         String state         = address.getAdminArea();
         String country       = address.getCountryName();
@@ -102,5 +98,4 @@ public class FetchAddressIntentService extends IntentService {
         bundle.putString(Constants.RESULT_DATA_KEY, message);
         mReceiver.send(resultCode, bundle);
     }
-
 }

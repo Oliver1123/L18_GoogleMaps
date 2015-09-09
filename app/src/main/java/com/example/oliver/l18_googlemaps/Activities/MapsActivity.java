@@ -70,12 +70,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(Constants.TAG, "MapActivity onPause");
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
@@ -156,7 +150,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         DialogFragment addMarkerDialog = new AddMarkerDialog();
         addMarkerDialog.setArguments(args);
         addMarkerDialog.show(getFragmentManager(), null);
-
     }
 
     @Override
