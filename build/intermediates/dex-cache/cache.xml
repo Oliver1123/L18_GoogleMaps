@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/oliver/Documents/Android/L18_GoogleMaps/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc3"
+        sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
+        <dex dex="/home/oliver/Documents/Android/L18_GoogleMaps/app/build/intermediates/pre-dexed/debug/classes-ff995064a3ecc33bb858866c815aea75276c1a28.jar" />
+    </item>
+
+</items>
