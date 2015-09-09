@@ -1,44 +1,49 @@
-package com.example.oliver.l18_googlemaps;
+package com.example.oliver.l18_googlemaps.Activities;
 
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.widget.DialogTitle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.oliver.l18_googlemaps.Constants;
 import com.example.oliver.l18_googlemaps.CustomView.MyMarker;
 import com.example.oliver.l18_googlemaps.DB.MarkerQueryHelper;
 import com.example.oliver.l18_googlemaps.Dialogs.AddMarkerDialog;
+import com.example.oliver.l18_googlemaps.Dialogs.LocationInfoDialog;
+import com.example.oliver.l18_googlemaps.FetchAddressIntentService;
+import com.example.oliver.l18_googlemaps.MyLocationListener;
+import com.example.oliver.l18_googlemaps.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
-                                                               GoogleMap.OnMapLongClickListener {
-    public static final String TAG = "tag";
-    public static final int ADD_MARKER_REQUEST = 123;
+                                                               GoogleMap.OnMapLongClickListener{
+
+    private static final long LOCATION_REFRESH_TIME = 5000;
+    private static final float LOCATION_REFRESH_DISTANCE = 10f ;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private ImageView mMarkerIcon;
     private MarkerQueryHelper mMarkerHelper;
+    private LocationManager mLocationManager;
+    private MyLocationListener mMyLocationListener;
+    private Location mCurrentLocation;
+    private AddressResultReceiver mResultReceiver;
+//    private Location mLastLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +53,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_AM);
         setSupportActionBar(toolbar);
 
+        mMyLocationListener = new MyLocationListener(this);
+
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
+                LOCATION_REFRESH_DISTANCE, mMyLocationListener);
+
         mMarkerHelper = new MarkerQueryHelper(this);
         mMarkerHelper.open();
-//        mMarkerHelper.clearAll();
-//        setUpMapIfNeeded();
     }
 
     @Override
@@ -63,8 +72,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "MapActivity onPause");
+        Log.d(Constants.TAG, "MapActivity onPause");
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -73,7 +83,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.clear();
             addMarkers();
         }
-        Log.d(TAG, "MapActivity onResume");
+        Log.d(Constants.TAG, "MapActivity onResume");
     }
 
     @Override
@@ -85,7 +95,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Log.d(TAG, "onOptionsItemSelected item = " + item.getTitle());
+        Log.d(Constants.TAG, "onOptionsItemSelected item = " + item.getTitle());
         switch (item.getItemId()) {
             case R.id.action_exit:
                 finish();
@@ -98,7 +108,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMarkerHelper.clearAll();
                 mMap.clear();
                 break;
-
+            case R.id.action_location_info:
+                if (mCurrentLocation != null) {
+                    startIntentService();
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "MapsActivity onMapReady");
+        Log.d(Constants.TAG, "MapsActivity onMapReady");
         mMap = googleMap;
         if (mMap == null) return;
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -137,7 +151,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapLongClick(LatLng latLng) {
         Bundle args = new Bundle();
-        args.putParcelable(AddMarkerDialog.ARG_LAT_LONG, latLng);
+        args.putParcelable(Constants.ARG_LAT_LONG, latLng);
 
         DialogFragment addMarkerDialog = new AddMarkerDialog();
         addMarkerDialog.setArguments(args);
@@ -147,12 +161,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_MARKER_REQUEST) {
-            Log.d(TAG, "MapActivity onActivityResult AddMarker");
+        if (requestCode == Constants.ADD_MARKER_REQUEST) {
+            Log.d(Constants.TAG, "MapActivity onActivityResult AddMarker");
             if (resultCode == RESULT_OK) {
-                LatLng latLng = data.getParcelableExtra(AddMarkerDialog.ARG_LAT_LONG);
-                String text = data.getStringExtra(AddMarkerDialog.ARG_TEXT);
-                String iconUri = data.getStringExtra(AddMarkerDialog.ARG_ICON_URI);
+                LatLng latLng   = data.getParcelableExtra(Constants.ARG_LAT_LONG);
+                String text     = data.getStringExtra(Constants.ARG_TEXT);
+                String iconUri  = data.getStringExtra(Constants.ARG_ICON_URI);
 
                 MyMarker marker = new MyMarker(this)
                         .position(latLng)
@@ -160,9 +174,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .icon(iconUri);
                 mMarkerHelper.insert(marker);
                 mMap.addMarker(marker.getMarkerOptions());
-
             }
         }
     }
+
+    public void setMyLocation(Location location) {
+        Log.d(Constants.TAG, "setMyLocation: " + location);
+        mCurrentLocation = location;
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, new AddressResultReceiver(null));
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mCurrentLocation);
+        startService(intent);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                Log.d(Constants.TAG, "onReceiverResult success result:  " + resultData.getString(Constants.RESULT_DATA_KEY));
+                DialogFragment locationInfoDialog = new LocationInfoDialog();
+                locationInfoDialog.setArguments(resultData);
+                locationInfoDialog.show(getFragmentManager(), null);
+            }
+            if (resultCode == Constants.FAILURE_RESULT) {
+                String errorMessage = resultData.getString(Constants.RESULT_DATA_KEY);
+                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
 }
 

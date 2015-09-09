@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.oliver.l18_googlemaps.Activities.MapsActivity;
+
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -30,8 +30,8 @@ public class BitmapResize {
         options.inJustDecodeBounds = true;
 
         BitmapFactory.decodeByteArray(data, 0, data.length, options);
-        Log.d(MapsActivity.TAG, "Image required width: " + reqWidth + ", height: " + reqHeight);
-        Log.d(MapsActivity.TAG, "Image before width: " + options.outWidth + ", height: " + options.outHeight);
+        Log.d(Constants.TAG, "Image required width: " + reqWidth + ", height: " + reqHeight);
+        Log.d(Constants.TAG, "Image before width: " + options.outWidth + ", height: " + options.outHeight);
         // Calculate new inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
@@ -39,9 +39,9 @@ public class BitmapResize {
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
 
-        Log.d(MapsActivity.TAG, "Image after width: " + bitmap.getWidth()+ ", height: " + bitmap.getHeight());
+        Log.d(Constants.TAG, "Image after width: " + bitmap.getWidth()+ ", height: " + bitmap.getHeight());
         String result = String.format("decodeBitmapFromByteArray size: %4s KB", (bitmap.getByteCount() / 1024));
-        Log.d(MapsActivity.TAG, result);
+        Log.d(Constants.TAG, result);
         return bitmap;
     }
     public static Bitmap decodeBitmapFromUri(Context context, String uri, int reqWidth, int reqHeight) throws IOException {

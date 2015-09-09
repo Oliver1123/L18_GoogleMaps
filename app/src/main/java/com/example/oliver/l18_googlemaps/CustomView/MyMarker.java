@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.oliver.l18_googlemaps.BitmapResize;
-import com.example.oliver.l18_googlemaps.MapsActivity;
+import com.example.oliver.l18_googlemaps.Constants;
 import com.example.oliver.l18_googlemaps.R;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,7 +48,7 @@ public class MyMarker {
     }
 
     public MyMarker icon(String iconUri) {
-        Log.d(MapsActivity.TAG, "MyMarker getIcon start ");
+        Log.d(Constants.TAG, "MyMarker getIcon start ");
         mIconUri = iconUri;
 //        new GetBitmapTask(mContext).execute(iconUri);
 //        or
@@ -100,7 +100,7 @@ public class MyMarker {
         @Override
         protected Bitmap doInBackground(String... params) {
             Bitmap bitmap = null;
-                Log.d(MapsActivity.TAG, "GetBitmapTask doInBackground uri:" + params[0]);
+            Log.d(Constants.TAG, "GetBitmapTask doInBackground uri:" + params[0]);
                 int dstWidth = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_width);
                 int dstHeight = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_height);
                 try {
@@ -118,7 +118,7 @@ public class MyMarker {
         protected void onPostExecute(Bitmap bitmap) {
 //            super.onPostExecute(bitmap);
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-            Log.d(MapsActivity.TAG, "MyMarker getIcon end");
+            Log.d(Constants.TAG, "MyMarker getIcon end");
         }
     }
 }

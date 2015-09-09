@@ -28,7 +28,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,9 +37,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MarkersActivity"
+            android:name=".Activities.MarkersActivity"
             android:label="@string/title_activity_markers" >
         </activity>
+
+        <service
+            android:name=".FetchAddressIntentService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

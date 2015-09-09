@@ -1,23 +1,24 @@
-package com.example.oliver.l18_googlemaps;
+package com.example.oliver.l18_googlemaps.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import com.example.oliver.l18_googlemaps.Constants;
+import com.example.oliver.l18_googlemaps.R;
 
 public class MarkersActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(MapsActivity.TAG, "   MarkersActivity onCreate");
+        Log.d(Constants.TAG, "   MarkersActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_markers);
     }
 
     @Override
     protected void onDestroy() {
-        Log.d(MapsActivity.TAG, "   MarkersActivity onDestroy");
+        Log.d(Constants.TAG, "   MarkersActivity onDestroy");
         super.onDestroy();
     }
 }

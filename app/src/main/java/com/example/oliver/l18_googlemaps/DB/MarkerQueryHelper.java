@@ -5,13 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
+import com.example.oliver.l18_googlemaps.Constants;
 import com.example.oliver.l18_googlemaps.CustomView.MyMarker;
-import com.example.oliver.l18_googlemaps.MapsActivity;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by oliver on 09.09.15.
@@ -59,7 +57,7 @@ public class MarkerQueryHelper {
             mDataBase.setTransactionSuccessful();
         } finally {
             mDataBase.endTransaction();
-            Log.d(MapsActivity.TAG, "inserted " + item.toString());
+            Log.d(Constants.TAG, "inserted " + item.toString());
         }
     }
 
@@ -92,12 +90,12 @@ public class MarkerQueryHelper {
                     .icon(marker_icon_uri);
 
                 result.add(item);
-                Log.d(MapsActivity.TAG, "get " + item.toString());
+                Log.d(Constants.TAG, "get " + item.toString());
             }
 
             c.close();
         }
-        Log.d(MapsActivity.TAG, "------------get from DB :" + result.size() + " items");
+        Log.d(Constants.TAG, "------------get from DB :" + result.size() + " items");
         return result;
     }
 
@@ -116,7 +114,7 @@ public class MarkerQueryHelper {
                     cv,
                     MarkerDBHelper.MARKER_LAT + " = ? AND " + MarkerDBHelper.MARKER_LONG + " = ?",
                     new String[]{String.valueOf(latLng.latitude), String.valueOf(latLng.longitude)});
-            Log.d(MapsActivity.TAG, "Helper updated:" + updated + " marker: " + marker);
+            Log.d(Constants.TAG, "Helper updated:" + updated + " marker: " + marker);
             mDataBase.setTransactionSuccessful();
         } finally {
             mDataBase.endTransaction();
@@ -133,7 +131,7 @@ public class MarkerQueryHelper {
                     new String[]{String.valueOf(latLng.latitude), String.valueOf(latLng.longitude)});
 
             mDataBase.setTransactionSuccessful();
-            Log.d(MapsActivity.TAG, "Deleted: " + deleted + " marker:" + marker );
+            Log.d(Constants.TAG, "Deleted: " + deleted + " marker:" + marker );
         } finally {
             mDataBase.endTransaction();
         }

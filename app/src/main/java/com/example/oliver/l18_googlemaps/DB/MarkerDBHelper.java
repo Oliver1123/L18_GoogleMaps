@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by oliver on 09.09.15.
  */
 public class MarkerDBHelper extends SQLiteOpenHelper {
-    public static final String DB_NAME = "markerDB.";
+    private static final String DB_NAME = "markerDB.";
 
     private static final int DB_VERSION = 1;
 

@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.example.oliver.l18_googlemaps.Activities.MapsActivity;
 import com.example.oliver.l18_googlemaps.CustomView.MarkerListItemView;
-import com.example.oliver.l18_googlemaps.CustomView.MarkerView;
 import com.example.oliver.l18_googlemaps.CustomView.MyMarker;
 import com.example.oliver.l18_googlemaps.DB.MarkerQueryHelper;
 import com.example.oliver.l18_googlemaps.Interfaces.MarkerActionCallbackListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by oliver on 09.09.15.
@@ -71,7 +70,7 @@ public class MarkerAdapter extends BaseAdapter implements MarkerActionCallbackLi
 
     @Override
     public void actionEdit(MyMarker marker, String title) {
-        Log.d(MapsActivity.TAG, "actionEdit marker:" + marker + " new Title: " + title);
+        Log.d(Constants.TAG, "actionEdit marker:" + marker + " new Title: " + title);
         int index = mData.indexOf(marker);
         mData.get(index).title(title);
         markerQueryHelper.update(mData.get(index));
@@ -80,7 +79,7 @@ public class MarkerAdapter extends BaseAdapter implements MarkerActionCallbackLi
 
     @Override
     public void actionDelete(MyMarker marker) {
-        Log.d(MapsActivity.TAG, "actionDelete marker:" + marker);
+        Log.d(Constants.TAG, "actionDelete marker:" + marker);
         mData.remove(marker);
         markerQueryHelper.delete(marker);
         notifyDataSetChanged();

@@ -2,8 +2,6 @@ package com.example.oliver.l18_googlemaps.CustomView;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,11 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.oliver.l18_googlemaps.Interfaces.MarkerActionCallbackListener;
-import com.example.oliver.l18_googlemaps.MapsActivity;
 import com.example.oliver.l18_googlemaps.R;
 import com.squareup.picasso.Picasso;
-
-import java.util.Map;
 
 /**
  * Created by oliver on 09.09.15.
@@ -49,15 +44,17 @@ public class MarkerListItemView  extends RelativeLayout implements View.OnClickL
 
       findViewById(R.id.ibDelete_MMV).setOnClickListener(this);
       findViewById(R.id.ibEdit_MMV).setOnClickListener(this);
-        mText.setOnClickListener(this);
-        mText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                mText.setText("onClick + " + System.currentTimeMillis());
-                return false;
-            }
-        });
-        mIcon .setOnClickListener(this);
+
+        //TODO Editing problem
+//        mText.setOnClickListener(this);
+//        mText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                mText.setText("onClick + " + System.currentTimeMillis());
+//                return false;
+//            }
+//        });
+//        mIcon .setOnClickListener(this);
 
     }
 
@@ -79,6 +76,6 @@ public class MarkerListItemView  extends RelativeLayout implements View.OnClickL
                 mListener.actionEdit(mMarker, mText.getText().toString());
                 break;
         }
-        mText.setText("onClick + " + System.currentTimeMillis());
+//        mText.setText("onClick + " + System.currentTimeMillis());
     }
 }
