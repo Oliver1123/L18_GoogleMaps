@@ -22,7 +22,8 @@
         android:layout_below="@+id/tvText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/ivIcon_MV" />
+        android:layout_toLeftOf="@+id/ivIcon_MV"
+        android:layout_toStartOf="@+id/ivIcon_MV"/>
 
     <ImageView
         android:layout_width="60dp"

@@ -32,7 +32,7 @@ public class MyMarker {
 
     public MyMarker position (LatLng latLng) {
         markerOptions.position(latLng);
-        String snippet = String.format("%.6f, %.6f", latLng.latitude, latLng.longitude);
+        String snippet = String.format("%.6f,\n%.6f", latLng.latitude, latLng.longitude);
         markerOptions.snippet(snippet);
         return this;
     }
@@ -84,9 +84,10 @@ public class MyMarker {
 
     @Override
     public String toString() {
-        return "MyMarker (" + getPosition().latitude + ", " + getPosition().longitude +") \n" +
-               "          title: " + getTitle() + "\n" +
-               "          iconUri: " + getIconUri();
+        return "MyMarker(" + String.format("%.4f", getPosition().latitude) +
+               ", " + String.format("%.4f", getPosition().longitude)+") " +
+               " title: " + getTitle() +
+               " iconUri: " + getIconUri();
 
     }
 

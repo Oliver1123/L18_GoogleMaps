@@ -1,4 +1,4 @@
-package com.example.oliver.l18_googlemaps;
+package com.example.oliver.l18_googlemaps.Interfaces;
 
 import android.widget.ImageView;
 

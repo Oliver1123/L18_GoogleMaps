@@ -32,8 +32,8 @@ import java.io.InputStream;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
-                                                               GoogleMap.OnMapLongClickListener{
-    public  static final String TAG = "tag";
+                                                               GoogleMap.OnMapLongClickListener {
+    public static final String TAG = "tag";
     public static final int ADD_MARKER_REQUEST = 123;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -61,9 +61,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "MapActivity onPause");
+    }
+    @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        if (mMap != null) {
+            mMap.clear();
+            addMarkers();
+        }
+        Log.d(TAG, "MapActivity onResume");
     }
 
     @Override
@@ -81,6 +91,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 finish();
                 return true;
             case R.id.action_mark_list:
+                Intent intent = new Intent(this, MarkersActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_clear_all:
+                mMarkerHelper.clearAll();
+                mMap.clear();
                 break;
 
         }
@@ -91,7 +107,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-           ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMapAsync(this);
 
         }
@@ -108,8 +124,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mMap.setOnMapLongClickListener(this);
 
+        addMarkers();
+    }
+
+    private void addMarkers() {
         List<MyMarker> markers = mMarkerHelper.getItems();
-        for (MyMarker current: markers) {
+        for (MyMarker current : markers) {
             mMap.addMarker(current.getMarkerOptions());
         }
     }
@@ -130,18 +150,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == ADD_MARKER_REQUEST) {
             Log.d(TAG, "MapActivity onActivityResult AddMarker");
             if (resultCode == RESULT_OK) {
-                LatLng latLng   = data.getParcelableExtra(AddMarkerDialog.ARG_LAT_LONG);
-                String text     = data.getStringExtra(AddMarkerDialog.ARG_TEXT);
-                String iconUri  = data.getStringExtra(AddMarkerDialog.ARG_ICON_URI);
+                LatLng latLng = data.getParcelableExtra(AddMarkerDialog.ARG_LAT_LONG);
+                String text = data.getStringExtra(AddMarkerDialog.ARG_TEXT);
+                String iconUri = data.getStringExtra(AddMarkerDialog.ARG_ICON_URI);
 
                 MyMarker marker = new MyMarker(this)
                         .position(latLng)
                         .title(text)
                         .icon(iconUri);
                 mMarkerHelper.insert(marker);
-                // TODO add marker to BD
                 mMap.addMarker(marker.getMarkerOptions());
+
             }
         }
     }
 }
+

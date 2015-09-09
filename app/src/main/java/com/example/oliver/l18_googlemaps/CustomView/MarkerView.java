@@ -1,14 +1,11 @@
 package com.example.oliver.l18_googlemaps.CustomView;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.example.oliver.l18_googlemaps.PickImageListener;
 import com.example.oliver.l18_googlemaps.R;
-import com.google.android.gms.maps.model.LatLng;
 
 
 public class MarkerView extends RelativeLayout {
@@ -21,7 +18,7 @@ public class MarkerView extends RelativeLayout {
     public MarkerView(Activity activity) {
         super(activity);
 
-        inflate(activity, R.layout.marker_view, this);
+        inflate(activity, R.layout.add_marker_view, this);
 
         findViews();
 

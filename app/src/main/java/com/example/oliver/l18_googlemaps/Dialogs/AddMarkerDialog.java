@@ -6,16 +6,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.oliver.l18_googlemaps.CustomView.MarkerView;
 import com.example.oliver.l18_googlemaps.MapsActivity;
-import com.example.oliver.l18_googlemaps.PickImageListener;
 import com.example.oliver.l18_googlemaps.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;

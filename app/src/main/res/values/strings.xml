@@ -6,4 +6,9 @@
     <string name="tvText">Text</string>
     <string name="tvLongitude">Longitude</string>
     <string name="tvLatitude">Latitude</string>
+    <string name="title_activity_markers">MarkersActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_clear_all">Clear All</string>
+    <string name="marker_title">Marker Title</string>
 </resources>

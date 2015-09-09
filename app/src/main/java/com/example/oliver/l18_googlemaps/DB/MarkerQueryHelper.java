@@ -68,8 +68,8 @@ public class MarkerQueryHelper {
      * Get all Contact Items from data base
      * @return list of Contact Items
      */
-    public List<MyMarker> getItems() {
-        List<MyMarker> result = new ArrayList<>();
+    public ArrayList<MyMarker> getItems() {
+        ArrayList<MyMarker> result = new ArrayList<>();
         Cursor c = mDataBase.query(MarkerDBHelper.MARKER_TABLE_NAME,
                 null,
                 null,
@@ -99,5 +99,43 @@ public class MarkerQueryHelper {
         }
         Log.d(MapsActivity.TAG, "------------get from DB :" + result.size() + " items");
         return result;
+    }
+
+    public void update(MyMarker marker) {
+        LatLng latLng = marker.getPosition();
+        mDataBase.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+
+            cv.put(MarkerDBHelper.MARKER_LAT, marker.getPosition().latitude);
+            cv.put(MarkerDBHelper.MARKER_LONG, marker.getPosition().longitude);
+            cv.put(MarkerDBHelper.MARKER_TITLE, marker.getTitle());
+            cv.put(MarkerDBHelper.MARKER_ICON_URI, marker.getIconUri());
+
+            int updated = mDataBase.update(MarkerDBHelper.MARKER_TABLE_NAME,
+                    cv,
+                    MarkerDBHelper.MARKER_LAT + " = ? AND " + MarkerDBHelper.MARKER_LONG + " = ?",
+                    new String[]{String.valueOf(latLng.latitude), String.valueOf(latLng.longitude)});
+            Log.d(MapsActivity.TAG, "Helper updated:" + updated + " marker: " + marker);
+            mDataBase.setTransactionSuccessful();
+        } finally {
+            mDataBase.endTransaction();
+        }
+    }
+
+    public void delete(MyMarker marker) {
+        LatLng latLng = marker.getPosition();
+        mDataBase.beginTransaction();
+        try {
+
+           int deleted = mDataBase.delete(MarkerDBHelper.MARKER_TABLE_NAME,
+                    MarkerDBHelper.MARKER_LAT + " = ? AND " + MarkerDBHelper.MARKER_LONG + " = ?",
+                    new String[]{String.valueOf(latLng.latitude), String.valueOf(latLng.longitude)});
+
+            mDataBase.setTransactionSuccessful();
+            Log.d(MapsActivity.TAG, "Deleted: " + deleted + " marker:" + marker );
+        } finally {
+            mDataBase.endTransaction();
+        }
     }
 }
