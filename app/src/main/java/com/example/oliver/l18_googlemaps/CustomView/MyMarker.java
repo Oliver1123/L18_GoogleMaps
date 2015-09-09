@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.oliver.l18_googlemaps.BitmapResize;
 import com.example.oliver.l18_googlemaps.MapsActivity;
 import com.example.oliver.l18_googlemaps.R;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -21,14 +22,18 @@ import java.io.IOException;
 public class MyMarker {
     MarkerOptions markerOptions;
     Context mContext;
+    String mIconUri;
 
     public MyMarker(Context context) {
         markerOptions = new MarkerOptions();
         mContext = context;
+        mIconUri = null;
     }
 
     public MyMarker position (LatLng latLng) {
         markerOptions.position(latLng);
+        String snippet = String.format("%.6f, %.6f", latLng.latitude, latLng.longitude);
+        markerOptions.snippet(snippet);
         return this;
     }
 
@@ -43,15 +48,47 @@ public class MyMarker {
     }
 
     public MyMarker icon(String iconUri) {
-        new GetBitmapTask(mContext).execute(iconUri);
+        Log.d(MapsActivity.TAG, "MyMarker getIcon start ");
+        mIconUri = iconUri;
+//        new GetBitmapTask(mContext).execute(iconUri);
+//        or
+        {
+            int dstWidth = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_width);
+            int dstHeight = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_height);
+            try {
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapResize.decodeBitmapFromUri(mContext, iconUri, dstWidth, dstHeight)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return  this;
     }
 
 
     public MarkerOptions getMarkerOptions(){
+        // TODO wait for GetBitmapTask finished;
         return markerOptions;
     }
+    public String getTitle(){
+        return markerOptions.getTitle();
+    }
+    public String getSnippet(){
+        return markerOptions.getSnippet();
+    }
+    public String getIconUri(){
+        return mIconUri;
+    }
+    public LatLng getPosition(){
+        return markerOptions.getPosition();
+    }
 
+    @Override
+    public String toString() {
+        return "MyMarker (" + getPosition().latitude + ", " + getPosition().longitude +") \n" +
+               "          title: " + getTitle() + "\n" +
+               "          iconUri: " + getIconUri();
+
+    }
 
     class GetBitmapTask extends AsyncTask<String, Void, Bitmap> {
         private Context mContext;
@@ -61,16 +98,18 @@ public class MyMarker {
         }
         @Override
         protected Bitmap doInBackground(String... params) {
-            Log.d(MapsActivity.TAG, "GetBitmapTask doInBackground uri:" + params[0]);
-            int dstWidth    = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_width);
-            int dstHeight   = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_height);
             Bitmap bitmap = null;
-            try {
-                bitmap = Picasso.with(mContext).load(Uri.parse(params[0])).resize(dstWidth, dstHeight).get();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Log.d(MapsActivity.TAG, bitmap.toString());
+                Log.d(MapsActivity.TAG, "GetBitmapTask doInBackground uri:" + params[0]);
+                int dstWidth = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_width);
+                int dstHeight = mContext.getResources().getDimensionPixelSize(R.dimen.marker_icon_height);
+                try {
+                    bitmap = Picasso.with(mContext).load(Uri.parse(params[0])).resize(dstWidth, dstHeight).get();
+//                    bitmap = BitmapResize.decodeBitmapFromUri(mContext, params[0], dstWidth, dstHeight);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                Log.d(MapsActivity.TAG, bitmap.toString());
+
             return bitmap;
         }
 
@@ -78,6 +117,7 @@ public class MyMarker {
         protected void onPostExecute(Bitmap bitmap) {
 //            super.onPostExecute(bitmap);
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+            Log.d(MapsActivity.TAG, "MyMarker getIcon end");
         }
     }
 }

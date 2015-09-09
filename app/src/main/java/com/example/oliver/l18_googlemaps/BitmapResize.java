@@ -1,8 +1,16 @@
 package com.example.oliver.l18_googlemaps;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by oliver on 08.09.15.
@@ -36,9 +44,17 @@ public class BitmapResize {
         Log.d(MapsActivity.TAG, result);
         return bitmap;
     }
-    public static Bitmap decodeBitmapFromUri(String uri, int reqWidth, int reqHeight) {
+    public static Bitmap decodeBitmapFromUri(Context context, String uri, int reqWidth, int reqHeight) throws IOException {
 
-        return null;
+            InputStream is = context.getContentResolver().openInputStream(Uri.parse(uri));
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+
+            while (is.read(buffer) != -1 ) {
+                bos.write(buffer);
+            }
+            return decodeBitmapFromByteArray(bos.toByteArray(), reqWidth, reqHeight);
+
     }
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                             int reqWidth, int reqHeight) {

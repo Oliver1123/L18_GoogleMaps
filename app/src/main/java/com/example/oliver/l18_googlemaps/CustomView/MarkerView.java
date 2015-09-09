@@ -11,16 +11,15 @@ import com.example.oliver.l18_googlemaps.R;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class MarkerView extends RelativeLayout implements View.OnClickListener {
+public class MarkerView extends RelativeLayout {
 
-    private final PickImageListener mListener;
+
     private EditText  mText;
-     private ImageView mIcon;
+    private ImageView mIcon;
 
 
-    public MarkerView(Activity activity, PickImageListener pickImageListener) {
+    public MarkerView(Activity activity) {
         super(activity);
-        mListener = pickImageListener;
 
         inflate(activity, R.layout.marker_view, this);
 
@@ -34,18 +33,14 @@ public class MarkerView extends RelativeLayout implements View.OnClickListener {
         mIcon       = (ImageView) findViewById(R.id.ivIcon_MV);
 
         mIcon.setImageResource(R.drawable.ic_marker);
-        mIcon.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        // Pick image from gallery;
-        mListener.pickImageIntoView(mIcon);
     }
 
     public String getText() {
         return mText.getText().toString();
     }
 
+    public ImageView getIconView() {
+        return mIcon;
+    }
 
 }

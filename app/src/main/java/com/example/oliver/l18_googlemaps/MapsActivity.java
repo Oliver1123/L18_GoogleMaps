@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.example.oliver.l18_googlemaps.CustomView.MyMarker;
+import com.example.oliver.l18_googlemaps.DB.MarkerQueryHelper;
 import com.example.oliver.l18_googlemaps.Dialogs.AddMarkerDialog;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
                                                                GoogleMap.OnMapLongClickListener{
@@ -36,6 +38,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ImageView mMarkerIcon;
+    private MarkerQueryHelper mMarkerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_AM);
         setSupportActionBar(toolbar);
 
-        setUpMapIfNeeded();
+        mMarkerHelper = new MarkerQueryHelper(this);
+        mMarkerHelper.open();
+//        mMarkerHelper.clearAll();
+//        setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMarkerHelper.close();
     }
 
     @Override
@@ -88,14 +100,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "MapsActivity onMapReady");
         mMap = googleMap;
         if (mMap == null) return;
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMapLongClickListener(this);
-//        mMap.setOnMapLongClickListener(this);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48, 22), 14));
+
+        List<MyMarker> markers = mMarkerHelper.getItems();
+        for (MyMarker current: markers) {
+            mMap.addMarker(current.getMarkerOptions());
+        }
     }
 
     @Override
@@ -118,12 +134,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String text     = data.getStringExtra(AddMarkerDialog.ARG_TEXT);
                 String iconUri  = data.getStringExtra(AddMarkerDialog.ARG_ICON_URI);
 
-                String snippet = String.format("Latitude: %.4f \n Longitude: %.4f", latLng.latitude, latLng.longitude);
-                Marker marker = mMap.addMarker(new MyMarker(this)
+                MyMarker marker = new MyMarker(this)
                         .position(latLng)
                         .title(text)
-                        .snippet(snippet)
-                        .icon(iconUri).getMarkerOptions());
+                        .icon(iconUri);
+                mMarkerHelper.insert(marker);
+                // TODO add marker to BD
+                mMap.addMarker(marker.getMarkerOptions());
             }
         }
     }
