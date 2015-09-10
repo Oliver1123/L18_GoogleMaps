@@ -17,4 +17,8 @@
     <string name="no_address_found">No address found</string>
     <string name="address_found">Address found</string>
     <string name="info_dialog_title">Location info</string>
+    <string name="action_map_type">Map Type</string>
+    <string name="action_type_hybrid">Hybrid</string>
+    <string name="action_type_map">Satellite</string>
+    <string name="action_type_terrain">Terrain</string>
 </resources>

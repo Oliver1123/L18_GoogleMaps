@@ -23,5 +23,24 @@
         android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="10"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_map_type"
+        android:title="@string/action_map_type"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom" >
+        <menu>
+            <item android:id="@+id/action_type_hybrid"
+                android:title="@string/action_type_hybrid"
+                android:orderInCategory="50"
+                app:showAsAction="ifRoom" />
+            <item android:id="@+id/action_type_satellite"
+                android:title="@string/action_type_map"
+                android:orderInCategory="51"
+                app:showAsAction="ifRoom" />
+            <item android:id="@+id/action_type_terrain"
+                android:title="@string/action_type_terrain"
+                android:orderInCategory="52"
+                app:showAsAction="ifRoom" />
+        </menu>
+    </item>
 
 </menu>
